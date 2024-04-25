@@ -10,7 +10,6 @@ output: html_document
 library(tidyverse)
 library(mosaic)
 library(openintro)
-library(randomForest)
 library(tidytuesdayR)
 ```
 
@@ -210,14 +209,15 @@ glimpse(coffee.new)
 We've discussed that there might be some interaction terms that are affecting the distribution of the variable `Total.Cup.Points`, and based on the plot, it suggests that there may be an interaction between the variables 'Country.Group' and 'Flavor'. Specifically, the distribution of 'Total.Cup.Points' appears to vary across different levels of 'Flavor' within each level of 'Country.Group'. This suggests that the effect of 'Flavor' on 'Total.Cup.Points' may depend on the 'Country.Group', indicating a potential interaction between these two factors. 
 
 ```{r, echo = FALSE, warning = FALSE}
-
-
-ggplot(data= coffee.new, aes(x = flavor, y = total_cup_points, fill = factor(country_group))) +
-  geom_smooth(method = 'loess', formula = 'y~x')  + 
-  labs(x = "Flavor", y = "Total Cup Points", fill = "Country Group") +
-  theme_light()
-
-
+coffee.new%>%
+  ggplot(aes(x=flavor, 
+             y=total_cup_points)) + 
+  geom_point() +
+  geom_smooth(method='lm',
+              se=FALSE) +
+  labs(x='Flavor', 
+       y='Total Coffee Points', 
+       title='Flavor vs. Total Coffee Points')
 ```
 
 # Ian's EDA Graphs
