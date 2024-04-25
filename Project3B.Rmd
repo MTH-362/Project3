@@ -1,6 +1,6 @@
 ---
 title: "Project3B"
-author: "Tina Trinh, Ian Kramer, Mary Testa"
+author: "Tina Trinh, Ian Kramer, Mary Testa, and Ben Strougal"
 date: "`r Sys.Date()`"
 output: html_document
 ---
