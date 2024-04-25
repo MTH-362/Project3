@@ -122,3 +122,90 @@ uniformity
 clean_cup
 sweetness
 cupper_points
+
+
+# EDA
+
+We first check if the dataset contains any NA values and found that there's 3877 NA values. We then create a new clean dataset that omit the rows that has NA value and call that new dataset `coffee.clean`
+
+```{r, include = FALSE}
+# Check if there's any NA values
+print(sum(is.na(coffee)))
+```
+
+```{r, include = FALSE}
+# clean NA value, assign the clean dataset as coffee.clean
+coffee.clean <- na.omit(coffee)
+
+# verify if the dataset is clean
+print(sum(is.na(coffee.clean)))
+```
+
+When we plot the distribution of the variable `Total.Cup.Points`, we see that distribution of the variable `Total.Cup.Points` is skewed to the left and unimodal. We can interpret this distribution as, in general, we have pretty high total rating points with the mean of around 82 points. The skewness of the distribution may suggest that there might be underlying interaction terms which are affecting the distribution of the variable. Note that there are 2 extreme outliers on this ditribution (based on the boxplot), so we'd use this distribution with caution.
+
+```{r, echo = FALSE}
+coffee.clean %>% ggplot(aes(x=Total.Cup.Points)) + geom_density()
+coffee.clean %>% ggplot(aes(x=Total.Cup.Points)) + geom_boxplot()
+print(mean(coffee.clean$Total.Cup.Points))
+```
+
+
+Since this dataset has multiple categorical variables, therefore, in order to simplifies the process of model selection. We assign the processing methods, color of the coffee, and country of origin as the table below 
+
+| **Variable**      | **Description**                                                                                                                                                                                                                                                                        |
+|-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Country.Group     | Group of countries where the bean came from based on their continents:<br>1: Latin American Countries (El Salvador, Costa Rica, Guatemala, Honduras, Brazil, Mexico, Nicaragua)<br>2: African Countries (United Republic of Tanzania)<br>3: Asian Countries (Taiwan, Indonesia, China) |
+| Processing.Method | Method for processing<br>1: Pulped natural / honey<br>2: Natural/Dry<br>3: Washed/Wet<br>4: Other                                                                                                                                                                                      |
+| Color             | Color of the bean<br>0: Green<br>1: Blue-green<br>2: Bluish-green                                                                                                                                                                                                                      |
+
+
+
+```{r, include=FALSE}
+
+print(unique(coffee.clean$Country.of.Origin))
+print(unique(coffee.clean$Processing.Method))
+
+coffee.new <- coffee.clean %>% mutate(
+  Processing.Method = case_when(
+    Processing.Method == "Pulped natural / honey" ~ 1,
+    Processing.Method == "Natural / Dry" ~ 2,
+    Processing.Method == "Washed / Wet" ~ 3,
+    Processing.Method == "Other" ~ 4),
+  Color = case_when(
+    Color == "Green" ~ 0,
+    Color == "Blue-Green" ~ 1,
+    Color == "Bluish-Green" ~ 2
+  ),
+  Country.Group = case_when(
+    Country.of.Origin %in% c("El Salvador", "Costa Rica", "Guatemala", "Honduras", "Brazil", "Mexico", "Nicaragua") ~ 1,
+    Country.of.Origin %in% c("Uganda", "Tanzania, United Republic Of") ~ 2,
+    Country.of.Origin %in% c("Taiwan", "Indonesia", "China") ~ 3
+  
+  ))
+glimpse(coffee.new)
+
+```
+
+Since we want to simplify the process of model selection, we'd exclude the variables that have string values and only focus on those with numerical values then assign this new dataset as `coffee.new`.
+
+```{r, echo = FALSE}
+coffee.new[,c('Species','...1','Owner','Country.of.Origin','Farm.Name','Lot.Number','Mill','ICO.Number','Company','Region',
+                    'Producer','Bag.Weight','In.Country.Partner','Harvest.Year','Grading.Date','Owner.1','Variety','Expiration',
+              'Certification.Body','Certification.Address','Certification.Contact','unit_of_measurement', 'Altitude','altitude_low_meters','altitude_high_meters','altitude_mean_meters')] <- list(NULL)
+glimpse(coffee.new)
+
+```
+
+We've discussed that there might be some interaction terms that are affecting the distribution of the variable `Total.Cup.Points`, and based on the plot, it suggests that there may be an interaction between the variables 'Country.Group' and 'Flavor'. Specifically, the distribution of 'Total.Cup.Points' appears to vary across different levels of 'Flavor' within each level of 'Country.Group'. This suggests that the effect of 'Flavor' on 'Total.Cup.Points' may depend on the 'Country.Group', indicating a potential interaction between these two factors. 
+
+```{r, echo = FALSE, warning = FALSE}
+
+
+ggplot(data= coffee.new, aes(x = Flavor, y = Total.Cup.Points, fill = factor(Country.Group))) +
+  geom_smooth(method = 'loess', formula = 'y~x')  + 
+  labs(x = "Flavor", y = "Total Cup Points", fill = "Country Group") +
+  theme_light()
+
+
+```
+
