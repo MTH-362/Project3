@@ -210,3 +210,25 @@ ggplot(data= coffee.new, aes(x = Flavor, y = Total.Cup.Points, fill = factor(Cou
 
 ```
 
+# Ian's EDA Graphs
+
+```{r, echo=FALSE}
+coffee_ratings2 <- coffee_ratings %>%
+  filter(total_cup_points != 0)
+  
+coffee_ratings2 %>%  
+  ggplot(aes(x = total_cup_points)) +
+  geom_histogram(binwidth = 1)
+
+coffee_ratings2 %>%
+  ggplot(aes(y = total_cup_points, x = altitude_mean_meters)) +
+  geom_point()
+
+coffee_ratings2 %>%
+  ggplot(aes(y=category_two_defects, x=category_one_defects)) +
+  geom_point()
+
+coffee_ratings2 %>%
+  ggplot(aes(y=total_cup_points, x=category_two_defects)) +
+  geom_point()
+```
