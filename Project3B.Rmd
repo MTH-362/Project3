@@ -141,12 +141,12 @@ We first check if the dataset contains any NA values and found that there's 3877
 
 ```{r, include = FALSE}
 # Check if there's any NA values
-print(sum(is.na(coffee)))
+print(sum(is.na(coffee_ratings)))
 ```
 
 ```{r, include = FALSE}
 # clean NA value, assign the clean dataset as coffee.clean
-coffee.clean <- na.omit(coffee)
+coffee.clean <- na.omit(coffee_ratings)
 
 # verify if the dataset is clean
 print(sum(is.na(coffee.clean)))
@@ -155,9 +155,9 @@ print(sum(is.na(coffee.clean)))
 When we plot the distribution of the variable `Total.Cup.Points`, we see that distribution of the variable `Total.Cup.Points` is skewed to the left and unimodal. We can interpret this distribution as, in general, we have pretty high total rating points with the mean of around 82 points. The skewness of the distribution may suggest that there might be underlying interaction terms which are affecting the distribution of the variable. Note that there are 2 extreme outliers on this ditribution (based on the boxplot), so we'd use this distribution with caution.
 
 ```{r, echo = FALSE}
-coffee.clean %>% ggplot(aes(x=Total.Cup.Points)) + geom_density()
-coffee.clean %>% ggplot(aes(x=Total.Cup.Points)) + geom_boxplot()
-print(mean(coffee.clean$Total.Cup.Points))
+coffee.clean %>% ggplot(aes(x=total_cup_points)) + geom_density()
+coffee.clean %>% ggplot(aes(x=total_cup_points)) + geom_boxplot()
+print(mean(coffee.clean$total_cup_points))
 ```
 
 
@@ -173,24 +173,24 @@ Since this dataset has multiple categorical variables, therefore, in order to si
 
 ```{r, include=FALSE}
 
-print(unique(coffee.clean$Country.of.Origin))
-print(unique(coffee.clean$Processing.Method))
+print(unique(coffee.clean$country_of_origin))
+print(unique(coffee.clean$processing_method))
 
 coffee.new <- coffee.clean %>% mutate(
-  Processing.Method = case_when(
-    Processing.Method == "Pulped natural / honey" ~ 1,
-    Processing.Method == "Natural / Dry" ~ 2,
-    Processing.Method == "Washed / Wet" ~ 3,
-    Processing.Method == "Other" ~ 4),
-  Color = case_when(
-    Color == "Green" ~ 0,
-    Color == "Blue-Green" ~ 1,
-    Color == "Bluish-Green" ~ 2
+  processing_method = case_when(
+    processing_method == "Pulped natural / honey" ~ 1,
+    processing_method == "Natural / Dry" ~ 2,
+    processing_method == "Washed / Wet" ~ 3,
+    processing_method == "Other" ~ 4),
+  color = case_when(
+    color == "Green" ~ 0,
+    color == "Blue-Green" ~ 1,
+    color == "Bluish-Green" ~ 2
   ),
-  Country.Group = case_when(
-    Country.of.Origin %in% c("El Salvador", "Costa Rica", "Guatemala", "Honduras", "Brazil", "Mexico", "Nicaragua") ~ 1,
-    Country.of.Origin %in% c("Uganda", "Tanzania, United Republic Of") ~ 2,
-    Country.of.Origin %in% c("Taiwan", "Indonesia", "China") ~ 3
+  country_group = case_when(
+    country_of_origin %in% c("El Salvador", "Costa Rica", "Guatemala", "Honduras", "Brazil", "Mexico", "Nicaragua") ~ 1,
+    country_of_origin %in% c("Uganda", "Tanzania, United Republic Of") ~ 2,
+    country_of_origin %in% c("Taiwan", "Indonesia", "China") ~ 3
   
   ))
 glimpse(coffee.new)
@@ -212,7 +212,7 @@ We've discussed that there might be some interaction terms that are affecting th
 ```{r, echo = FALSE, warning = FALSE}
 
 
-ggplot(data= coffee.new, aes(x = Flavor, y = Total.Cup.Points, fill = factor(Country.Group))) +
+ggplot(data= coffee.new, aes(x = flavor, y = total_cup_points, fill = factor(country_group))) +
   geom_smooth(method = 'loess', formula = 'y~x')  + 
   labs(x = "Flavor", y = "Total Cup Points", fill = "Country Group") +
   theme_light()
