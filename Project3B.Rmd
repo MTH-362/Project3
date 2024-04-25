@@ -109,6 +109,7 @@ rating for coffee (total_cup_points)?
 
 The analysis begins with a linear regression, because it is by far the simplest one to run and will likely expose issues that can be resolved by choosing a different model. It is very unlikely that the linear regression will produce substantive results, but it serves as a solid base to start the analysis from. 
 
+
 hi
 
 The ten variables to not use are:
