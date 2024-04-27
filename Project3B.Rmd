@@ -160,8 +160,8 @@ Since this dataset has multiple categorical variables, therefore, in order to si
 
 ```{r, include=FALSE}
 
-print(unique(coffee.clean$country_of_origin))
-print(unique(coffee.clean$processing_method))
+print(unique(coffee.clean$Country.of.Origin))
+print(unique(coffee.clean$Processing.Method))
 
 coffee.new <- coffee.clean %>% mutate(
   country_group = case_when(
@@ -247,21 +247,28 @@ coffee_ratings2 %>%
 
 ## MODEL SELECTION
 
+<<<<<<< HEAD
 ```{r}
 mlr <- lm(Total.Cup.Points ~ ., data=coffee.new)
 summary(mlr)
 ```
+
 
 ```{r, echo=TRUE, eval=FALSE}
 coffeeSub <- regsubsets(`Total.Cup.Points` ~ Category.Two.Defects + Category.One.Defects + 
     Moisture + Quakers + altitude_mean_meters + Number.of.Bags, data = coffee.clean, nbest=2)
 plot(coffeeSub)
 
-model3 <- lm(Total.Cup.Points~ Category.Two.Defects + Moisture, data = coffee_ratings2)
+model3 <- lm(Total.Cup.Points~ Category.Two.Defects + Moisture, data = coffee.new)
 
 summary(model3)
 
 ```
+
+
+To perform model selection, a subset selection of variables can be created to help choose variables to put into a linear model. After running the subset selection, the best model that can be created is a linear model with category two defects and moisture as the sole explanatory variables. Even using the best model possible for a linear model, the adjusted R squared is still extremely low. Because of this, a linear model shouldn't be used, and a different model should be found. A gamma might be better in this scenario because our data is continuous and positive.
+
+
 
 ```{r}
 naCoffee = coffee.new %>% drop_na()
@@ -325,4 +332,7 @@ coffee.new %>% summarize(MAE.inverse = mean(abs(Total.Cup.Points - predict.inver
 
 
 ```
+
+
+
 
