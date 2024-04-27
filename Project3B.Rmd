@@ -15,7 +15,7 @@ library(leaps)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-coffee_ratings <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv')
 ```
 
 ## Introduction
@@ -142,9 +142,9 @@ print(sum(is.na(coffee.clean)))
 When we plot the distribution of the variable `Total.Cup.Points`, we see that distribution of the variable `Total.Cup.Points` is skewed to the left and unimodal. We can interpret this distribution as, in general, we have pretty high total rating points with the mean of around 82 points. The skewness of the distribution may suggest that there might be underlying interaction terms which are affecting the distribution of the variable. Note that there are 2 extreme outliers on this ditribution (based on the boxplot), so we'd use this distribution with caution.
 
 ```{r, echo = FALSE}
-coffee.clean %>% ggplot(aes(x=total_cup_points)) + geom_density()
-coffee.clean %>% ggplot(aes(x=total_cup_points)) + geom_boxplot()
-print(mean(coffee.clean$total_cup_points))
+coffee.clean %>% ggplot(aes(x=Total.Cup.Points)) + geom_density()
+coffee.clean %>% ggplot(aes(x=Total.Cup.Points)) + geom_boxplot()
+print(mean(coffee.clean$Total.Cup.Points))
 ```
 
 
@@ -165,9 +165,9 @@ print(unique(coffee.clean$processing_method))
 
 coffee.new <- coffee.clean %>% mutate(
   country_group = case_when(
-    country_of_origin %in% c("El Salvador", "Costa Rica", "Guatemala", "Honduras", "Brazil", "Mexico", "Nicaragua") ~ "South America",
-    country_of_origin %in% c("Uganda", "Tanzania, United Republic Of") ~ "Africa",
-    country_of_origin %in% c("Taiwan", "Indonesia", "China") ~ "Asia"
+    Country.of.Origin %in% c("El Salvador", "Costa Rica", "Guatemala", "Honduras", "Brazil", "Mexico", "Nicaragua") ~ "South America",
+    Country.of.Origin %in% c("Uganda", "Tanzania, United Republic Of") ~ "Africa",
+    Country.of.Origin %in% c("Taiwan", "Indonesia", "China") ~ "Asia"
   
   ))
 glimpse(coffee.new)
@@ -191,8 +191,8 @@ We've discussed that there might be some interaction terms that are affecting th
 
 ```{r, echo = FALSE, warning = FALSE}
 coffee.new%>%
-  ggplot(aes(x=flavor, 
-             y=total_cup_points)) + 
+  ggplot(aes(x=Flavor, 
+             y=Total.Cup.Points)) + 
   geom_point() +
   geom_smooth(method='lm',
               se=FALSE) +
