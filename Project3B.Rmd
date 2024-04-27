@@ -242,3 +242,9 @@ coffee_ratings2 %>%
 mlr <- lm(total_cup_points ~ ., data=coffee_ratings)
 summary(mlr)
 ```
+
+```{r, echo=TRUE, eval=FALSE}
+coffeeSub <- regsubsets(`total_cup_points` ~ category_one_defects + category_two_defects + 
+    moisture + quakers + altitude_mean_meters + number_of_bags, data = coffee_ratings2, nbest=2)
+plot(coffeeSub)
+```
