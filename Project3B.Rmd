@@ -334,5 +334,27 @@ coffee.new %>% summarize(MAE.inverse = mean(abs(Total.Cup.Points - predict.inver
 ```
 
 
+### Linear model assumption check
+
+```{r}
+plot(linear.model, which =c(1,2))
+```
+
+
+
+### Gamma model assumption check 
+```{r}
+plot(gamma.inverse, which = c(1,2))
+
+```
+
+```{r}
+plot(gamma.identity, which =c(1,2))
+```
+
+
+```{r}
+plot(gamma.log, which =c(1,2))
+```
 
 
