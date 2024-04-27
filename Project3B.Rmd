@@ -258,3 +258,8 @@ coffeeSub <- regsubsets(`total_cup_points` ~ category_one_defects + category_two
     moisture + quakers + altitude_mean_meters + number_of_bags, data = coffee_ratings2, nbest=2)
 plot(coffeeSub)
 ```
+
+```{r, trace = 0}
+stepwise <- lm(`total_cup_points` ~ ., naCoffee)
+model_b <- step(stepwise, direction='backward')
+```
