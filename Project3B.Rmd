@@ -221,3 +221,12 @@ coffee_ratings2 %>%
   ggplot(aes(y=total_cup_points, x=category_two_defects)) +
   geom_point()
 ```
+
+```{r, echo=FALSE}
+coffee_ratings2 <- coffee_ratings %>%
+  filter(total_cup_points != 0)
+  
+coffee_ratings2 %>%  
+  ggplot(aes(x = total_cup_points)) +
+  geom_histogram(binwidth = 1)
+```
