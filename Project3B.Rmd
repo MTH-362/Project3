@@ -260,6 +260,6 @@ plot(coffeeSub)
 ```
 
 ```{r, trace = 0}
-stepwise <- lm(`total_cup_points` ~ ., naCoffee)
+stepwise <- lm(`total_cup_points` ~ ., coffee.new)
 model_b <- step(stepwise, direction='backward')
 ```
