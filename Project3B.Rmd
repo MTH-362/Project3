@@ -271,3 +271,58 @@ naCoffee = coffee.new %>% drop_na()
 stepwise <- lm(Total.Cup.Points ~ ., naCoffee)
 model_b <- step(stepwise, direction='backward')
 ```
+
+## Gamma 
+
+### Gamma inverse link
+
+```{r}
+library(MASS)
+gamma.inverse <- glm(Total.Cup.Points ~ ., family = Gamma(link = "inverse"),  data = coffee.new)
+summary(gamma.inverse)
+```
+
+
+
+### Gamma log link
+```{r}
+gamma.log <- glm(Total.Cup.Points ~ ., family = Gamma(link = "log"),  data = coffee.new)
+summary(gamma.log)
+```
+
+
+# Gamma identity
+
+```{r}
+gamma.identity <- glm(Total.Cup.Points ~ ., family = Gamma(link = "identity"),  data = coffee.new)
+summary(gamma.identity)
+
+```
+
+
+### Compare MSE and MAE for gamma and linear 
+```{r}
+linear.model <- lm(Total.Cup.Points ~ Number.of.Bags + Aroma + Flavor + Aftertaste + 
+    Acidity + Body + Balance + Uniformity + Clean.Cup + Sweetness + 
+    Cupper.Points, data = coffee.new)
+
+
+coffee.new <- coffee.new %>% mutate(predict.inverse = gamma.inverse$fitted.values, 
+                                    predict.identity = gamma.identity$fitted.values,
+                                    predict.log = gamma.log$fitted.values,
+                                    predict.linear = linear.model$fitted.values)
+
+
+coffee.new %>% summarize(MSE.inverse = mean((Total.Cup.Points - predict.inverse)^2),
+                         MSE.log = mean((Total.Cup.Points - predict.log)^2),
+                         MSE.identity = mean((Total.Cup.Points - predict.identity)^2),
+                         MSE.linear = mean((Total.Cup.Points -predict.linear)))
+
+coffee.new %>% summarize(MAE.inverse = mean(abs(Total.Cup.Points - predict.inverse)),
+                         MAE.log = mean(abs(Total.Cup.Points - predict.log)),
+                         MAE.identity = mean(abs(Total.Cup.Points - predict.identity)),
+                         MAE.linear = mean(abs(Total.Cup.Points-predict.linear)))
+
+
+```
+
