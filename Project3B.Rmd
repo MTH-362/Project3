@@ -121,7 +121,7 @@ The explanatory variable chosen was total_cup_points. This was a fairly obvious 
 
 Some of the EDA was made before this realization occured, but keeping them present doesn't cause any long-term issues. 
 
-# EDA
+>#EDA
 
 We first check if the dataset contains any NA values and found that there's 3877 NA values. We then create a new clean dataset that omit the rows that has NA value and call that new dataset `coffee.clean`
 
@@ -234,4 +234,11 @@ coffee_ratings2 %>%
 coffee_ratings2 %>%
   ggplot(aes(y=total_cup_points, x=category_two_defects)) +
   geom_point()
+```
+
+>MODEL FITTING/MODEL SELECTION:
+
+```{r}
+mlr <- lm(total_cup_points ~ ., data=coffee_ratings)
+summary(mlr)
 ```
