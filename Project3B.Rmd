@@ -15,7 +15,7 @@ library(leaps)
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
-coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
+coffee_ratings <- read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-07-07/coffee_ratings.csv')
 ```
 
 ## Introduction
@@ -177,12 +177,12 @@ glimpse(coffee.new)
 Since we want to simplify the process of model selection, we'd exclude the variables that have string values and only focus on those with numerical values then assign this new dataset as `coffee.new`.
 
 ```{r, echo = FALSE}
-coffee.new[,c('Species','...1',
-              'owner','country_of_origin','farm_name','lot_number','Mill','ICO.Number','Company',
-              'Region','Producer','Bag.Weight','In.Country.Partner','Harvest.Year','Grading.Date',
-              'Owner.1','Variety','Expiration','Certification.Body','Certification.Address',
-              'Certification.Contact','unit_of_measurement',
-              'Altitude','altitude_low_meters','altitude_high_meters','altitude_mean_meters')] <- list(NULL)
+coffee.new[,c('species',
+              'owner','country_of_origin','farm_name','lot_number','mill','ico_number','company',
+              'altitude','producer','bag_weight','in_country_partner','harvest_year','grading_date',
+              'owner_1','variety','certification_body','certification_address','expiration',
+              'certification_contact','unit_of_measurement','region',
+              'altitude_low_meters','altitude_high_meters','altitude_mean_meters')] <- list(NULL)
 glimpse(coffee.new)
 
 ```
@@ -262,12 +262,7 @@ coffeeSub <- regsubsets(`total_cup_points` ~ category_one_defects + category_two
 plot(coffeeSub)
 ```
 
-
-```{r}
-naCoffee = coffee_ratings2 %>% drop_na()
-```
-
 ```{r, trace = 0}
-stepwise <- lm(`total_cup_points` ~ ., naCoffee)
+stepwise <- lm(total_cup_points ~ ., coffee.new)
 model_b <- step(stepwise, direction='backward')
 ```
