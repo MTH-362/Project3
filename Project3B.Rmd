@@ -209,7 +209,7 @@ coffee_ratings2 <- coffee_ratings %>%
   
 coffee_ratings2 %>%  
   ggplot(aes(x = total_cup_points)) +
-  geom_histogram(binwidth = 1)
+  geom_histogram(binwidth = 1) + labs(x = "Total Coffee Points", y = "Count", title = "Total Coffee Points Distribution")
 ```
 
 
