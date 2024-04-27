@@ -262,7 +262,11 @@ coffeeSub <- regsubsets(`total_cup_points` ~ category_one_defects + category_two
 plot(coffeeSub)
 ```
 
+```{r}
+naCoffee = coffee_ratings2 %>% drop_na()
+```
+
 ```{r, trace = 0}
-stepwise <- lm(total_cup_points ~ ., coffee.new)
+stepwise <- lm(total_cup_points ~ ., naCoffee)
 model_b <- step(stepwise, direction='backward')
 ```
