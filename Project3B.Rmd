@@ -247,7 +247,7 @@ coffee_ratings2 %>%
 
 ## MODEL SELECTION
 
-<<<<<<< HEAD
+
 ```{r}
 mlr <- lm(Total.Cup.Points ~ ., data=coffee.new)
 summary(mlr)
