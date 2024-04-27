@@ -331,6 +331,11 @@ coffee.new %>% summarize(MAE.inverse = mean(abs(Total.Cup.Points - predict.inver
                          MAE.linear = mean(abs(Total.Cup.Points-predict.linear)))
 
 
+AIC(gamma.inverse)
+AIC(gamma.log)
+AIC(gamma.identity)
+AIC(linear.model)
+
 ```
 
 
