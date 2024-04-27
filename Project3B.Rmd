@@ -220,6 +220,9 @@ coffee.new%>%
        title='Flavor vs. Total Coffee Points')
 ```
 
+Looking at this plot, it's evident that flavor shares a clear positive relationship with total coffee points. It makes sense that as flavor increases, the perception of the cup does as well. A good tasting coffee is likely to be a good cup of joe overall. There is an outlier at the low end of the plot, and it doesn't follow along with the trend. It's rating is much lower than the plot would have predicted, so there may be other factors within that cup of coffee that make it worse besides flavor.
+
+
 # Ian's EDA Graphs
 
 ```{r, echo=FALSE}
