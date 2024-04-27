@@ -177,9 +177,12 @@ glimpse(coffee.new)
 Since we want to simplify the process of model selection, we'd exclude the variables that have string values and only focus on those with numerical values then assign this new dataset as `coffee.new`.
 
 ```{r, echo = FALSE}
-coffee.new[,c('Species','...1','Owner','Country.of.Origin','Farm.Name','Lot.Number','Mill','ICO.Number','Company','Region',
-                    'Producer','Bag.Weight','In.Country.Partner','Harvest.Year','Grading.Date','Owner.1','Variety','Expiration',
-              'Certification.Body','Certification.Address','Certification.Contact','unit_of_measurement', 'Altitude','altitude_low_meters','altitude_high_meters','altitude_mean_meters')] <- list(NULL)
+coffee.new[,c('Species','...1',
+              'owner','country_of_origin','farm_name','lot_number','Mill','ICO.Number','Company',
+              'Region','Producer','Bag.Weight','In.Country.Partner','Harvest.Year','Grading.Date',
+              'Owner.1','Variety','Expiration','Certification.Body','Certification.Address',
+              'Certification.Contact','unit_of_measurement',
+              'Altitude','altitude_low_meters','altitude_high_meters','altitude_mean_meters')] <- list(NULL)
 glimpse(coffee.new)
 
 ```
@@ -249,7 +252,7 @@ coffee_ratings2 %>%
 ## MODEL SELECTION
 
 ```{r}
-mlr <- lm(total_cup_points ~ ., data=coffee_ratings)
+mlr <- lm(total_cup_points ~ ., data=coffee.new)
 summary(mlr)
 ```
 
