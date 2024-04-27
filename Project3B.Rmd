@@ -10,6 +10,7 @@ library(tidyverse)
 library(mosaic)
 library(openintro)
 library(tidytuesdayR)
+library(leaps)
 ```
 
 ```{r setup, include=FALSE}
@@ -19,7 +20,7 @@ coffee_ratings <- readr::read_csv('https://raw.githubusercontent.com/rfordatasci
 
 ## Introduction
 
->INTRODUCTION:
+
 > This data was retrieved from the Coffee Quality Database courtesy of Buzzfeed Data Scientist James LeDoux. The information was collected from the Coffee Quality Institute's review pages in January 2018. This data holds very detailed information over Arabica and Robusta beans, across many countries and they are professionally rated on a 0-100 scale. There are many rates/scores for things like acidity, sweetness, fragrance, balance, etc. Here is a brief explanation of all the variables included in the data frame with 1339 observations on the following 43 variables:
 
 >total_cup_points - Total rating/points (0 - 100 scale)
@@ -236,7 +237,7 @@ coffee_ratings2 %>%
   geom_point()
 ```
 
->MODEL FITTING/MODEL SELECTION:
+## MODEL SELECTION
 
 ```{r}
 mlr <- lm(total_cup_points ~ ., data=coffee_ratings)
