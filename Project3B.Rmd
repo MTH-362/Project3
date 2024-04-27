@@ -162,20 +162,10 @@ print(unique(coffee.clean$country_of_origin))
 print(unique(coffee.clean$processing_method))
 
 coffee.new <- coffee.clean %>% mutate(
-  processing_method = case_when(
-    processing_method == "Pulped natural / honey" ~ 1,
-    processing_method == "Natural / Dry" ~ 2,
-    processing_method == "Washed / Wet" ~ 3,
-    processing_method == "Other" ~ 4),
-  color = case_when(
-    color == "Green" ~ 0,
-    color == "Blue-Green" ~ 1,
-    color == "Bluish-Green" ~ 2
-  ),
   country_group = case_when(
-    country_of_origin %in% c("El Salvador", "Costa Rica", "Guatemala", "Honduras", "Brazil", "Mexico", "Nicaragua") ~ 1,
-    country_of_origin %in% c("Uganda", "Tanzania, United Republic Of") ~ 2,
-    country_of_origin %in% c("Taiwan", "Indonesia", "China") ~ 3
+    country_of_origin %in% c("El Salvador", "Costa Rica", "Guatemala", "Honduras", "Brazil", "Mexico", "Nicaragua") ~ "South America",
+    country_of_origin %in% c("Uganda", "Tanzania, United Republic Of") ~ "Africa",
+    country_of_origin %in% c("Taiwan", "Indonesia", "China") ~ "Asia"
   
   ))
 glimpse(coffee.new)
