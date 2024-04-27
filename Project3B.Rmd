@@ -260,6 +260,10 @@ summary(mlr)
 coffeeSub <- regsubsets(`total_cup_points` ~ category_one_defects + category_two_defects + 
     moisture + quakers + altitude_mean_meters + number_of_bags, data = coffee_ratings2, nbest=2)
 plot(coffeeSub)
+
+model3 <- lm(total_cup_points ~ category_two_defects + moisture, data = coffee_ratings2)
+
+summary(model3)
 ```
 
 ```{r}
