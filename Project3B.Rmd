@@ -119,6 +119,8 @@ The analysis begins with a linear regression, because it is by far the simplest 
 
 The explanatory variable chosen was total_cup_points. This was a fairly obvious choice, given that the ideal outcome was to determine what factors go into making the best cup of coffee. To this end, it was established fairly early on that the total_cup_points were simply equal to the sum of ten other variables already present in the dataset: aroma, flavor, aftertaste, acidity, body, balance, uniformity, clean_cup, sweetness, and cupper_points. Therefore, using these variables in any model would be both redundant and uninformative, as it is already known what the relation between them and the total score is.
 
+Some of the EDA was made before this realization occured, but keeping them present doesn't cause any long-term issues. 
+
 # EDA
 
 We first check if the dataset contains any NA values and found that there's 3877 NA values. We then create a new clean dataset that omit the rows that has NA value and call that new dataset `coffee.clean`
@@ -208,6 +210,10 @@ coffee_ratings2 %>%
   ggplot(aes(x = total_cup_points)) +
   geom_histogram(binwidth = 1)
 ```
+
+
+There was one observation in the data that had a total coffee point score of 0. This is an extreme outlier, and also doesn't really make sense logistically. It would be hard for any cup of coffee to truly score a flat 0 without there being some sort of bias in the rating. With a score that low, it could affect the model later on, so removing it from the data would be a good decision.
+
 
 ```{r, echo=FALSE}
 coffee_ratings2 <- coffee_ratings %>%
