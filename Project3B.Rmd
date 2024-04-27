@@ -216,6 +216,15 @@ coffee_ratings2 %>%
 There was one observation in the data that had a total coffee point score of 0. This is an extreme outlier, and also doesn't really make sense logistically. It would be hard for any cup of coffee to truly score a flat 0 without there being some sort of bias in the rating. With a score that low, it could affect the model later on, so removing it from the data would be a good decision.
 
 
+```{r, echo = FALSE}
+ggplot(data = coffee_ratings2, aes(x = total_cup_points, fill = species, color = species)) + geom_density() + facet_wrap(~ species) + labs(x = "Total Cup Points", title = "Species vs. Total Cup Points")
+
+```
+
+
+These plots look extremely similar, but the Robusta species has a lower mean than Arabica. Since the shape of the density plots are so similar in shape, it seems that Robusta as a species is very close in consistency to Arabica. Because the mean is lower though, there may be some kind of genetic issue with the bean that maybe doesn't bring out as much flavor or something like that. Overall though, the species are very comparable to one another.
+
+
 ```{r, echo=FALSE}
 coffee_ratings2 <- coffee_ratings %>%
   filter(total_cup_points != 0)
