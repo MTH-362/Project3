@@ -18,6 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv')
 ```
 
+
 ## Introduction
 
 
