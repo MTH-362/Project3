@@ -243,7 +243,9 @@ model_b <- step(stepwise, direction='backward')
 
 ```{r}
 library(MASS)
-gamma.inverse <- glm(Total.Cup.Points ~ ., family = Gamma(link = "inverse"),  data = coffee.new)
+gamma.inverse <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
+    Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - 
+    Sweetness - Uniformity, family = Gamma(link = "inverse"),  data = coffee.new)
 summary(gamma.inverse)
 
 gamma.inverse.back <- step(gamma.inverse, direction='backward')
@@ -252,16 +254,16 @@ gamma.inverse.back <- step(gamma.inverse, direction='backward')
 
 "Best" gamma model with inverse link (the one with lowest AIC)
 ```{r}
-gamma.best.inverse <- glm(Total.Cup.Points ~ Number.of.Bags + Aroma + Flavor + Aftertaste + 
-    Acidity + Body + Balance + Uniformity + Clean.Cup + Sweetness + 
-    Cupper.Points + country_group, data = coffee.new, family = Gamma(link = "inverse"))
+gamma.best.inverse <- glm(Total.Cup.Points ~ country_group + Color + Processing.Method, data = coffee.new, family = Gamma(link = "inverse"))
 ```
 
 
 
 ### Gamma log link
 ```{r}
-gamma.log <- glm(Total.Cup.Points ~ ., family = Gamma(link = "log"),  data = coffee.new)
+gamma.log <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
+    Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - 
+    Sweetness - Uniformity, family = Gamma(link = "log"),  data = coffee.new)
 summary(gamma.log)
 
 gamma.log.backward <- step(gamma.log, direction= 'backward')
@@ -269,9 +271,7 @@ gamma.log.backward <- step(gamma.log, direction= 'backward')
 
 "Best" gamma log 
 ```{r}
-gamma.best.log <- glm(Total.Cup.Points ~ Number.of.Bags + Aroma + Flavor + Aftertaste + 
-    Acidity + Body + Balance + Uniformity + Clean.Cup + Sweetness + 
-    Cupper.Points + country_group, data = coffee.new, family = Gamma(link = "log"))
+gamma.best.log <- glm(Total.Cup.Points ~ country_group + Color + Processing.Method, data = coffee.new, family = Gamma(link = "log"))
 ```
 
 
@@ -279,7 +279,7 @@ gamma.best.log <- glm(Total.Cup.Points ~ Number.of.Bags + Aroma + Flavor + After
 # Gamma identity
 
 ```{r}
-gamma.identity <- glm(Total.Cup.Points ~ ., family = Gamma(link = "identity"),  data = coffee.new)
+gamma.identity <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - Sweetness - Uniformity, family = Gamma(link = "identity"),  data = coffee.new)
 summary(gamma.identity)
 
 gamma.identity.backward <- step(gamma.identity, direction = 'backward')
@@ -289,9 +289,7 @@ gamma.identity.backward <- step(gamma.identity, direction = 'backward')
 
 
 ```{r}
-gamma.best.identity <- glm(Total.Cup.Points ~ Number.of.Bags + Aroma + Flavor + Aftertaste + 
-    Acidity + Body + Balance + Uniformity + Clean.Cup + Sweetness + 
-    Cupper.Points, data = coffee.new, family = Gamma(link = "identity"))
+gamma.best.identity <- glm(Total.Cup.Points ~ Processing.Method + Color + country_group, data = coffee.new, family = Gamma(link = "identity"))
 ```
 
 
@@ -302,18 +300,18 @@ linear.model <- lm(Total.Cup.Points ~ Number.of.Bags + Aroma + Flavor + Aftertas
     Cupper.Points, data = coffee.new)
 
 
-coffee.new <- coffee.new %>% mutate(predict.inverse = gamma.best.inverse$fitted.values, 
+coffee.new.data <- coffee.new %>% mutate(predict.inverse = gamma.best.inverse$fitted.values, 
                                     predict.identity = gamma.best.identity$fitted.values,
                                     predict.log = gamma.best.log$fitted.values,
                                     predict.linear = linear.model$fitted.values)
 
 
-coffee.new %>% summarize(MSE.inverse = mean((Total.Cup.Points - predict.inverse)^2),
+coffee.new.data %>% summarize(MSE.inverse = mean((Total.Cup.Points - predict.inverse)^2),
                          MSE.log = mean((Total.Cup.Points - predict.log)^2),
                          MSE.identity = mean((Total.Cup.Points - predict.identity)^2),
                          MSE.linear = mean((Total.Cup.Points -predict.linear)))
 
-coffee.new %>% summarize(MAE.inverse = mean(abs(Total.Cup.Points - predict.inverse)),
+coffee.new.data %>% summarize(MAE.inverse = mean(abs(Total.Cup.Points - predict.inverse)),
                          MAE.log = mean(abs(Total.Cup.Points - predict.log)),
                          MAE.identity = mean(abs(Total.Cup.Points - predict.identity)),
                          MAE.linear = mean(abs(Total.Cup.Points-predict.linear)))
