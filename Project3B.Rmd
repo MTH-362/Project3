@@ -350,3 +350,11 @@ plot(gamma.best.log, which =c(1,2))
 
 For all of the gamma Q-Q and residuals vs. fitted plots, they are nearly identical to one another. For the Q-Q plots, they follow a very straight line. Because of this, they all have evidence for normality. However, the residuals vs. fitted plots are not randomly distributed across the horizontal axis at all. There is not enough evidence to claim linearity for the gamma models.
 
+
+Among the gamma models, the gamma model using the identity log function appears to be the best by checking its AIC value. The AIC is 580.82, which is marginally lower than the two other gamma models, making it the best option.
+
+
+## Gamma Analysis
+
+
+
