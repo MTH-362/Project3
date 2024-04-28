@@ -21,100 +21,57 @@ coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quali
 ## Introduction
 
 
-> This data was retrieved from the Coffee Quality Database courtesy of Buzzfeed Data Scientist James LeDoux. The information was collected from the Coffee Quality Institute's review pages in January 2018. This data holds very detailed information over Arabica and Robusta beans, across many countries and they are professionally rated on a 0-100 scale. There are many rates/scores for things like acidity, sweetness, fragrance, balance, etc. Here is a brief explanation of all the variables included in the data frame with 1339 observations on the following 43 variables:
+> This data was retrieved from the Coffee Quality Database courtesy of Buzzfeed Data Scientist James LeDoux. The information was collected from the Coffee Quality Institute's review pages in January 2018. This data holds very detailed information over Arabica and Robusta beans, across many countries and they are professionally rated on a 0-100 scale. There are many rates/scores for things like acidity, sweetness, fragrance, balance, etc. Here is a brief explanation of all the variables included in the data frame with 1339 observations on the following 44 variables:
 
->total_cup_points - Total rating/points (0 - 100 scale)
 
->species	- Species of coffee bean (arabica or robusta)
+|Variable|Description|
+|--- |--- |
+|…1|id|
+|Species|Species of coffee bean (arabica or robusta)|
+|Owner|Owner of the farm|
+|Country.of.Origin|Where the bean came from|
+|Farm.Name|Name of the farm|
+|Lot.Number|Lot number of the beans tested|
+|Mill|Mill where the beans were processed|
+|ICO.Number|International Coffee Organization number|
+|Company|Company name|
+|Altitude|Altitude|
+|Region|Region where bean came from|
+|Producer|Producer of the roasted bean|
+|Number.of.Bags|Number of bags tested|
+|Bag.Weight|Bag weight tested|
+|In.Country.Partner|Partner for the country|
+|Harvest.Year|When the beans were harvested (year)|
+|Grading.Date|When the beans were graded|
+|Owner.1|Who owns the beans|
+|Variety|Variety of the beans|
+|Processing.Method|Method for processing|
+|Aroma|Aroma grade|
+|Flavor|Flavor grade|
+|Aftertaste|Aftertaste grade|
+|Acidity|Acidity grade|
+|Body|Body grade|
+|Balance|Balance grade|
+|Uniformity|Uniformity grade|
+|Clean.Cup|Clean cup grade|
+|Sweetness|Sweetness grade|
+|Cupper.Points|Cupper Points|
+|Total.Cup.Points|Total rating/points (0 - 100 scale)|
+|Moisture|Moisture Grade|
+|Category.One.Defects|Category one defects (count)|
+|Quakers|quakers|
+|Color|Color of bean|
+|Category.Two.Defects|Category two defects (count)|
+|Expiration|Expiration date of the beans|
+|Certification.Body|Who certified it|
+|Certification.Address|Certification body address|
+|Certification.Contact|Certification contact|
+|unit_of_measurement|Unit of measurement|
+|altitude_low_meters|Altitude low meters|
+|altitude_high_meters|Altitude high meters|
+|altitude_mean_meters|Altitude mean meters|
 
->owner	- Owner of the farm
 
->country_of_origin	- Where the bean came from
-
->farm_name - Name of the farm
-
->lot_number - Lot number of the beans tested
-
->mill - Mill where the beans were processed
-
->ico_number - International Coffee Organization number
-
->company	- Company name
-
->altitude - this is a messy column - I've left it for some cleaning
-
->region - Region where bean came from
-
->producer - Producer of the roasted bean
-
->number_of_bags - Number of bags tested
-
->bag_weight - Bag weight tested
-
->in_country_partner - Partner for the country
-
->harvest_year	- When the beans were harvested (year)
-
->grading_date	- When the beans were graded
-
->owner_1 - Who owns the beans
-
->variety - Variety of the beans
-
->processing_method - Method for processing
-
->aroma - Aroma grade
-
->flavor	- Flavor grade
-
->aftertaste	- Aftertaste grade
-
->acidity - Acidity grade
-
->body	- Body grade
-
->balance	- Balance grade
-
->uniformity	- Uniformity grade
-
->clean_cup	- Clean cup grade
-
->sweetness	- Sweetness grade
-
->cupper_points	- Cupper Points
-
->moisture	- Moisture Grade
-
->category_one_defects	- Category one defects (count)
-
->quakers - quakers
-
->color - Color of bean
-
->category_two_defects	- Category two defects (count)
-
->expiration	- Expiration date of the beans
-
->certification_body	- Who certified it
-
->certification_address - Certification body address
-
->certification_contact - Certification contact
-
->unit_of_measurement	- Unit of measurement
-
->altitude_low_meters	- Altitude low meters
-
->altitude_high_meters	- Altitude high meters
-
->altitude_mean_meters	- Altitude mean meters
-
-> Although this data is from 2018, the opportunity to discover the particular nuances that make coffee highly rated and delicious can be entertaining and interesting for personal coffee use. This information can serve as a guide in choosing high quality coffee beans and our analysis can be used to filter which factors are most important in influencing the total coffee rating. 
-
->Research Question: What factors may lead to a good
-rating for coffee (total_cup_points)?
-
->Response Variable: Total rating/points, 0 - 100 scale(total_cup_points)
 
 The analysis begins with a linear regression, because it is by far the simplest one to run and will likely expose issues that can be resolved by choosing a different model. It is very unlikely that the linear regression will produce substantive results, but it serves as a solid base to start the analysis from. 
 
