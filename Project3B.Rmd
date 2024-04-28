@@ -348,3 +348,5 @@ plot(gamma.best.log, which =c(1,2))
 ```
 
 
+For all of the gamma Q-Q and residuals vs. fitted plots, they are nearly identical to one another. For the Q-Q plots, they follow a very straight line. Because of this, they all have evidence for normality. However, the residuals vs. fitted plots are not randomly distributed across the horizontal axis at all. There is not enough evidence to claim linearity for the gamma models.
+
