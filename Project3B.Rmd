@@ -305,8 +305,7 @@ gamma.best.inverse <- glm(Total.Cup.Points ~ Number.of.Bags + Aroma + Flavor + A
 ```{r}
 gamma.log <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
     Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - 
-    Sweetness - Uniformity - predict.identity - predict.log - 
-    predict.inverse - predict.linear, family = Gamma(link = "log"),  data = coffee.new)
+    Sweetness - Uniformity , family = Gamma(link = "log"),  data = coffee.new)
 summary(gamma.log)
 
 gamma.log.backward <- step(gamma.log, direction= 'backward')
@@ -322,7 +321,7 @@ gamma.best.log <- glm(Total.Cup.Points ~ country_group + Color + Processing.Meth
 # Gamma identity
 
 ```{r}
-gamma.identity <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - Sweetness - Uniformity - predict.identity - predict.log - predict.inverse - predict.linear, family = Gamma(link = "identity"),  data = coffee.new)
+gamma.identity <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - Sweetness - Uniformity, family = Gamma(link = "identity"),  data = coffee.new)
 summary(gamma.identity)
 
 gamma.identity.backward <- step(gamma.identity, direction = 'backward')
