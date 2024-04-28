@@ -299,18 +299,18 @@ linear.model <- lm(Total.Cup.Points ~ Number.of.Bags + Aroma + Flavor + Aftertas
     Cupper.Points, data = coffee.new)
 
 
-coffee.new <- coffee.new %>% mutate(predict.inverse = gamma.best.inverse$fitted.values, 
+coffee.new.data <- coffee.new %>% mutate(predict.inverse = gamma.best.inverse$fitted.values, 
                                     predict.identity = gamma.best.identity$fitted.values,
                                     predict.log = gamma.best.log$fitted.values,
                                     predict.linear = linear.model$fitted.values)
 
 
-coffee.new %>% summarize(MSE.inverse = mean((Total.Cup.Points - predict.inverse)^2),
+coffee.new.data %>% summarize(MSE.inverse = mean((Total.Cup.Points - predict.inverse)^2),
                          MSE.log = mean((Total.Cup.Points - predict.log)^2),
                          MSE.identity = mean((Total.Cup.Points - predict.identity)^2),
                          MSE.linear = mean((Total.Cup.Points -predict.linear)))
 
-coffee.new %>% summarize(MAE.inverse = mean(abs(Total.Cup.Points - predict.inverse)),
+coffee.new.data %>% summarize(MAE.inverse = mean(abs(Total.Cup.Points - predict.inverse)),
                          MAE.log = mean(abs(Total.Cup.Points - predict.log)),
                          MAE.identity = mean(abs(Total.Cup.Points - predict.identity)),
                          MAE.linear = mean(abs(Total.Cup.Points-predict.linear)))
