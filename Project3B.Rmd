@@ -242,7 +242,9 @@ model_b <- step(stepwise, direction='backward')
 
 ```{r}
 library(MASS)
-gamma.inverse <- glm(Total.Cup.Points ~ ., family = Gamma(link = "inverse"),  data = coffee.new)
+gamma.inverse <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
+    Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - 
+    Sweetness - Uniformity, family = Gamma(link = "inverse"),  data = coffee.new)
 summary(gamma.inverse)
 
 gamma.inverse.back <- step(gamma.inverse, direction='backward')
@@ -251,9 +253,7 @@ gamma.inverse.back <- step(gamma.inverse, direction='backward')
 
 "Best" gamma model with inverse link (the one with lowest AIC)
 ```{r}
-gamma.best.inverse <- glm(Total.Cup.Points ~ Number.of.Bags + Aroma + Flavor + Aftertaste + 
-    Acidity + Body + Balance + Uniformity + Clean.Cup + Sweetness + 
-    Cupper.Points + country_group, data = coffee.new, family = Gamma(link = "inverse"))
+gamma.best.inverse <- glm(Total.Cup.Points ~ country_group + Color + Processing.Method, data = coffee.new, family = Gamma(link = "inverse"))
 ```
 
 
@@ -262,7 +262,7 @@ gamma.best.inverse <- glm(Total.Cup.Points ~ Number.of.Bags + Aroma + Flavor + A
 ```{r}
 gamma.log <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
     Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - 
-    Sweetness - Uniformity , family = Gamma(link = "log"),  data = coffee.new)
+    Sweetness - Uniformity, family = Gamma(link = "log"),  data = coffee.new)
 summary(gamma.log)
 
 gamma.log.backward <- step(gamma.log, direction= 'backward')
