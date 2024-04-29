@@ -21,7 +21,7 @@ coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quali
 ## Introduction
 
 
-> This data was retrieved from the Coffee Quality Database courtesy of Buzzfeed Data Scientist James LeDoux. The information was collected from the Coffee Quality Institute's review pages in January 2018. This data holds very detailed information over Arabica and Robusta beans, across many countries and they are professionally rated on a 0-100 scale. There are many rates/scores for things like acidity, sweetness, fragrance, balance, etc. Here is a brief explanation of all the variables included in the data frame with 1339 observations on the following 44 variables:
+> This data was retrieved from the Coffee Quality Database courtesy of Buzzfeed Data Scientist James LeDoux. The information was collected from the Coffee Quality Institute's review pages in January 2018. This data holds very detailed information over Arabica and Robusta beans, across many countries and they are professionally rated on a 0-100 scale. There are many rates/scores for things like acidity, sweetness, fragrance, balance, etc. Here is a brief explanation of all the variables included in the data frame with 1311 observations on the following 44 variables:
 
 
 |Variable|Description|
@@ -73,13 +73,13 @@ coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quali
 
 
 
-The analysis begins with a linear regression, because it is by far the simplest one to run and will likely expose issues that can be resolved by choosing a different model. It is very unlikely that the linear regression will produce substantive results, but it serves as a solid base to start the analysis from. 
+> The analysis begins with a linear regression, because it is by far the simplest one to run and will likely expose issues that can be resolved by choosing a different model. It is very unlikely that the linear regression will produce substantive results, but it serves as a solid base to start the analysis from. 
 
-The explanatory variable chosen was total_cup_points. This was a fairly obvious choice, given that the ideal outcome was to determine what factors go into making the best cup of coffee. To this end, it was established fairly early on that the total_cup_points were simply equal to the sum of ten other variables already present in the dataset: aroma, flavor, aftertaste, acidity, body, balance, uniformity, clean_cup, sweetness, and cupper_points. Therefore, using these variables in any model would be both redundant and uninformative, as it is already known what the relation between them and the total score is.
+> The explanatory variable chosen was total_cup_points. This was a fairly obvious choice, given that the ideal outcome was to determine what factors go into making the best cup of coffee. To this end, it was established fairly early on that the total_cup_points were simply equal to the sum of ten other variables already present in the dataset: aroma, flavor, aftertaste, acidity, body, balance, uniformity, clean_cup, sweetness, and cupper_points. Therefore, using these variables in any model would be both redundant and uninformative, as it is already known what the relation between them and the total score is.
 
-Some of the EDA was made before this realization occured, but keeping them present doesn't cause any long-term issues. 
+> Some of the EDA was made before this realization occured, but keeping them present doesn't cause any long-term issues. 
 
->#EDA
+## EDA
 
 We first check if the dataset contains any NA values and found that there's 3877 NA values. We then create a new clean dataset that omit the rows that has NA value and call that new dataset `coffee.clean`
 
@@ -96,7 +96,7 @@ coffee.clean <- na.omit(coffee_ratings)
 print(sum(is.na(coffee.clean)))
 ```
 
-When we plot the distribution of the variable `Total.Cup.Points`, we see that distribution of the variable `Total.Cup.Points` is skewed to the left and unimodal. We can interpret this distribution as, in general, we have pretty high total rating points with the mean of around 82 points. The skewness of the distribution may suggest that there might be underlying interaction terms which are affecting the distribution of the variable. Note that there are 2 extreme outliers on this ditribution (based on the boxplot), so we'd use this distribution with caution.
+> When we plot the distribution of the variable `Total.Cup.Points`, we see that distribution of the variable `Total.Cup.Points` is skewed to the left and unimodal. We can interpret this distribution as, in general, we have pretty high total rating points with the mean of around 82 points. The skewness of the distribution may suggest that there might be underlying interaction terms which are affecting the distribution of the variable. Note that there are 2 extreme outliers on this ditribution (based on the boxplot), so we'd use this distribution with caution.
 
 ```{r, echo = FALSE}
 coffee.clean %>% ggplot(aes(x=Total.Cup.Points)) + geom_density()
@@ -105,13 +105,11 @@ print(mean(coffee.clean$Total.Cup.Points))
 ```
 
 
-Since this dataset has multiple categorical variables, therefore, in order to simplifies the process of model selection. We assign the processing methods, color of the coffee, and country of origin as the table below 
+> Since this dataset has multiple categorical variables, therefore, in order to simplifies the process of model selection. We assign the processing methods, color of the coffee, and country of origin as the table below 
 
 | **Variable**      | **Description**                                                                                                                                                                                                                                                                        |
 |-------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| Country.Group     | Group of countries where the bean came from based on their continents:<br>1: Latin American Countries (El Salvador, Costa Rica, Guatemala, Honduras, Brazil, Mexico, Nicaragua)<br>2: African Countries (United Republic of Tanzania)<br>3: Asian Countries (Taiwan, Indonesia, China) |
-| Processing.Method | Method for processing<br>1: Pulped natural / honey<br>2: Natural/Dry<br>3: Washed/Wet<br>4: Other                                                                                                                                                                                      |
-| Color             | Color of the bean<br>0: Green<br>1: Blue-green<br>2: Bluish-green                                                                                                                                                                                                                      |
+| Country.Group     | Group of countries where the bean came from based on their continents (South America, Africa, Asia): |
 
 
 
@@ -355,6 +353,9 @@ Among the gamma models, the gamma model using the identity log function appears 
 
 
 ## Gamma Analysis
+
+
+
 
 
 
