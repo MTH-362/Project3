@@ -18,6 +18,11 @@ knitr::opts_chunk$set(echo = TRUE)
 coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv')
 ```
 
+## Disclaimer
+
+Our data set keeps loading in differently which is causing inaccurate outputs in our model than what it was earlier, so a couple things like the subset regression are different than the ones used in the presentation.
+
+
 ## Introduction
 
 
@@ -168,6 +173,12 @@ There was one observation in the data that had a total coffee point score of 0. 
 ```{r, echo = FALSE}
 ggplot(data = coffee_ratings2, aes(x = Total.Cup.Points, fill = Species, color = Species)) + geom_density() + facet_wrap(~ Species) + labs(x = "Total Cup Points", title = "Species vs. Total Cup Points")
 
+```
+
+
+```{r}
+
+ggplot(data = coffee.new, aes(x = country_group, y = Total.Cup.Points, fill = country_group)) + geom_boxplot() + labs(x = "Continent", y = "Total Coffee Points", title = "Total Coffee Points Based on Continent")
 ```
 
 
@@ -357,6 +368,16 @@ Among the gamma models, the gamma model using the identity log function appears 
 
 
 ## Gamma Analysis
+
+
+
+
+## Country Regions Plot
+
+```{r}
+
+ggplot(data = coffee.new, aes(x = country_group, y = Total.Cup.Points, fill = country_group)) + geom_boxplot() + labs(x = "Continent", y = "Total Coffee Points", title = "Total Coffee Points Based on Continent")
+```
 
 
 
