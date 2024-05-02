@@ -25,7 +25,7 @@ coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quali
 # Introduction
 
 
-> This data was retrieved from the Coffee Quality Database courtesy of Buzzfeed Data Scientist James LeDoux. The information was collected from the Coffee Quality Institute's review pages in January 2018. This data holds very detailed information over Arabica and Robusta beans, across many countries and they are professionally rated on a 0-100 scale. There are many rates/scores for things like acidity, sweetness, fragrance, balance, etc. Here is a brief explanation of all the variables included in the data frame with 1311 observations on the following 44 variables:
+This data was retrieved from the Coffee Quality Database courtesy of Buzzfeed Data Scientist James LeDoux. The information was collected from the Coffee Quality Institute's review pages in January 2018. This data holds very detailed information over Arabica and Robusta beans, across many countries and they are professionally rated on a 0-100 scale. There are many rates/scores for things like acidity, sweetness, fragrance, balance, etc. Here is a brief explanation of all the variables included in the data frame with 1311 observations on the following 44 variables:
 
 
 |Variable|Description|
@@ -77,11 +77,11 @@ coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quali
 
 
 
-> The analysis begins with a linear regression, because it is by far the simplest one to run and will likely expose issues that can be resolved by choosing a different model. It is very unlikely that the linear regression will produce substantive results, but it serves as a solid base to start the analysis from. 
+The analysis begins with a linear regression, because it is by far the simplest one to run and will likely expose issues that can be resolved by choosing a different model. It is very unlikely that the linear regression will produce substantive results, but it serves as a solid base to start the analysis from. 
 
-> The explanatory variable chosen was total_cup_points. This was a fairly obvious choice, given that the ideal outcome was to determine what factors go into making the best cup of coffee. To this end, it was established fairly early on that the total_cup_points were simply equal to the sum of ten other variables already present in the dataset: aroma, flavor, aftertaste, acidity, body, balance, uniformity, clean_cup, sweetness, and cupper_points. Therefore, using these variables in any model would be both redundant and uninformative, as it is already known what the relation between them and the total score is.
+The explanatory variable chosen was total_cup_points. This was a fairly obvious choice, given that the ideal outcome was to determine what factors go into making the best cup of coffee. To this end, it was established fairly early on that the total_cup_points were simply equal to the sum of ten other variables already present in the dataset: aroma, flavor, aftertaste, acidity, body, balance, uniformity, clean_cup, sweetness, and cupper_points. Therefore, using these variables in any model would be both redundant and uninformative, as it is already known what the relation between them and the total score is.
 
-> Some of the EDA was made before this realization occured, but keeping them present doesn't cause any long-term issues. 
+Some of the EDA was made before this realization occured, but keeping them present doesn't cause any long-term issues. 
 
 ## EDA
 
@@ -100,7 +100,7 @@ coffee.clean <- na.omit(coffee_ratings)
 print(sum(is.na(coffee.clean)))
 ```
 
-> When we plot the distribution of the variable `Total.Cup.Points`, we see that distribution of the variable `Total.Cup.Points` is skewed to the left and unimodal. We can interpret this distribution as, in general, we have pretty high total rating points with the mean of around 82 points. The skewness of the distribution may suggest that there might be underlying interaction terms which are affecting the distribution of the variable. Note that there are 2 extreme outliers on this ditribution (based on the boxplot), so we'd use this distribution with caution.
+When we plot the distribution of the variable `Total.Cup.Points`, we see that distribution of the variable `Total.Cup.Points` is skewed to the left and unimodal. We can interpret this distribution as, in general, we have pretty high total rating points with the mean of around 82 points. The skewness of the distribution may suggest that there might be underlying interaction terms which are affecting the distribution of the variable. Note that there are 2 extreme outliers on this ditribution (based on the boxplot), so we'd use this distribution with caution.
 
 ```{r, echo = FALSE}
 coffee.clean %>% ggplot(aes(x=Total.Cup.Points)) + geom_density()
@@ -109,7 +109,7 @@ print(mean(coffee.clean$Total.Cup.Points))
 ```
 
 
-> We simplified the categorical variable of country of origin of the coffee bean by assigning the countries based on their continents (Asia, South America, Africa) rather than having the specific country of where the beans came from. We assign the new dataset as `coffee.new` that contains the grouping of the countries based on their continent.
+We simplified the categorical variable of country of origin of the coffee bean by assigning the countries based on their continents (Asia, South America, Africa) rather than having the specific country of where the beans came from. We assign the new dataset as `coffee.new` that contains the grouping of the countries based on their continent.
 
 
 ```{r, include=FALSE}
@@ -128,7 +128,7 @@ glimpse(coffee.new)
 
 ```
 
-> Since we want to simplify the process of model selection, we'd exclude the variables that have string values and only focus on those with numerical values then assign this new dataset as `coffee.new`.
+Since we want to simplify the process of model selection, we'd exclude the variables that have string values and only focus on those with numerical values then assign this new dataset as `coffee.new`.
 
 ```{r, echo = FALSE}
 coffee.new[,c('Species','...1','Owner','Country.of.Origin','Farm.Name','Lot.Number','Mill','ICO.Number','Company','Region',
@@ -159,7 +159,7 @@ coffee_ratings2 <- coffee_ratings %>%
 ```
 
 
-There was one observation in the data that had a total coffee point score of 0. This is an extreme outlier, and also doesn't really make sense logistically. It would be hard for any cup of coffee to truly score a flat 0 without there being some sort of bias in the rating. With a score that low, it could affect the model later on, so removing it from the data would be a good decision.
+There was one observation in the data that had a total coffee point score of 0. This is an extreme outlier, and also doesn't really make sense logically. It would be hard for any cup of coffee to truly score a flat 0 without there being some sort of bias in the rating. With a score that low, it could affect the model later on, so removing it from the data would be a good decision.
 
 
 ```{r, echo = FALSE}
@@ -177,7 +177,6 @@ ggplot(data = coffee.new, aes(x = country_group, y = Total.Cup.Points, fill = co
 These plots look extremely similar, but the Robusta species has a lower mean than Arabica. Since the shape of the density plots are so similar in shape, it seems that Robusta as a species is very close in consistency to Arabica. Because the mean is lower though, there may be some kind of genetic issue with the bean that maybe doesn't bring out as much flavor or something like that. Overall though, the species are very comparable to one another.
 
 
-> We filtered out the 0 total cup points since they are extreme low outliers. 
 
 Below are two graphs- one exploring the relation between category 2 defects and the total cup points, and the other confirming there is no multicolinearity between the two categories of defects. 
 
@@ -238,7 +237,7 @@ summary(linear.model)
 
 ## Linear model assumption check
 
-> Based on the residual and QQ plots, we see that clearly, the model 3 meets normality, equal variance, and linearity assumptions (we assume that both the models meet the independent assumption). Therefore, we'd use `model3` as our "best" linear model 
+Based on the residual and QQ plots, we see that clearly, the model 3 meets normality, equal variance, and linearity assumptions (we assume that both the models meet the independent assumption). Therefore, we'd use `model3` as our "best" linear model 
 
 ```{r}
 plot(model3, which = c(1,2))
@@ -249,11 +248,11 @@ plot(linear.model, which =c(1,2))
 
 ## Gamma 
 
-> Recall that our `Total.Cup.Points` variable is continuous and skewed, therefore, we can also use the gamma selection to "normalize" the data. We will analyze 3 different gamma link - log, inverse, and identity - to see which one would be the best fit for our model. After finding the "best" fit, we'd compare the "best" gamma model vs. the "best" linear model using the MSE and MAE
+Recall that our `Total.Cup.Points` variable is continuous and skewed, therefore, we can also use the gamma selection to "normalize" the data. We will analyze 3 different gamma link - log, inverse, and identity - to see which one would be the best fit for our model. After finding the "best" fit, we'd compare the "best" gamma model vs. the "best" linear model using the MSE and MAE
 
 ### Gamma inverse link
 
-> We first assign the model `gamma.inverse` with all the explanatory variables. Then we'll use the backward model selection to select the "best" gamma model and call it `gamma.best.inverse` (the "best" model is chosen based on the smalles AIC)
+We first assign the model `gamma.inverse` with all the explanatory variables. Then we'll use the backward model selection to select the "best" gamma model and call it `gamma.best.inverse` (the "best" model is chosen based on the smalles AIC)
 
 ```{r}
 library(MASS)
@@ -271,7 +270,7 @@ gamma.best.inverse <- glm(Total.Cup.Points ~ country_group + Color + Processing.
 
 ## Gamma log link
 
-> Similar to the inverse link, we also use the backward model selection to select the "best" gamma model with log link and assign it as `gamma.log.backward`
+Similar to the inverse link, we also use the backward model selection to select the "best" gamma model with log link and assign it as `gamma.log.backward`
 
 ```{r}
 gamma.log <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
@@ -286,7 +285,7 @@ gamma.best.log <- glm(Total.Cup.Points ~ country_group + Color + Processing.Meth
 
 ## Gamma identity
 
-> We also select the "best" gamma model with identity log using the same process as we did for the log and inverse link, then assign that "best" gamma model as `gamma.identity.backward`
+We also select the "best" gamma model with identity log using the same process as we did for the log and inverse link, then assign that "best" gamma model as `gamma.identity.backward`
 
 ```{r}
 gamma.identity <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - Sweetness - Uniformity, family = Gamma(link = "identity"),  data = coffee.new)
@@ -301,7 +300,7 @@ gamma.best.identity <- glm(Total.Cup.Points ~ Processing.Method + Color + countr
 
 ### Gamma model assumption check 
 
-> The linearity and equal variance assumptions are not met because the red line is curvature rather than straight and horizontal like it's supposed to be, also the data points seem to clump up instead of spreading out evenly. The normality assumption is moderately good because the data points all line up on the line, there are some points that not really on the predict line at the end, suggests that they might be extreme outliers. 
+The linearity and equal variance assumptions are not met because the red line is curvature rather than straight and horizontal like it's supposed to be, also the data points seem to clump up instead of spreading out evenly. The normality assumption is moderately good because the data points all line up on the line, there are some points that not really on the predict line at the end, suggests that they might be extreme outliers. 
 
 ```{r}
 plot(gamma.best.inverse, which = c(1,2))
@@ -309,14 +308,14 @@ plot(gamma.best.inverse, which = c(1,2))
 ```
 
 
-> Similar to the inverse, the linearity and the equal variance assumptions are not quite met. The QQ plot is also moderately good because they all on the theoritical line except some points are not at the very end
+Similar to the inverse, the linearity and the equal variance assumptions are not quite met. The QQ plot is also moderately good because they all on the theoritical line except some points are not at the very end
 
 ```{r}
 plot(gamma.best.identity, which =c(1,2))
 ```
 
 
-> Using the same reasoning, we can see that the equal variance as well as linearity assumptions are not met, but the normality is. 
+Using the same reasoning, we can see that the equal variance as well as linearity assumptions are not met, but the normality is. 
 
 ```{r}
 plot(gamma.best.log, which =c(1,2))
@@ -364,4 +363,15 @@ ggplot(data = coffee.new, aes(x = country_group, y = Total.Cup.Points, fill = co
 
 
 
-# Conclusion
+## Final Analysis
+
+
+So, what makes a perfect cup of coffee? After the final model, it seems that country group, color, and processing method are the best predictors for the total cup points. Some continents are better than others at producing quality coffee beans, like how South America had the lowest scores using the box plot. Also, color is a factor because it could be indicative of the flavor that particular coffee has, which directly impacts the final score. The processing method makes a difference too, so a combination of these three variables tells us what a score 0-100 will most likely be for any particular cup of coffee. 
+
+
+
+Final Concerns:
+
+
+
+One main concern for this analysis is that by the end of our data cleaning we are left with a little over 100 data observations. Over-cleaning the data is a real concern (not ethical because over-cleaning can result in faulty results) and having few observations to work with can create inaccurate conclusions for the larger population of coffee evaluations. It should be noted that the dataset only had 1339 data points to begin with as well. In regards to process, perhaps deciding what variables to use and then deleting missing values would have been a better way to clean and increase our overall points, thus bettering the validity of our final results. Coming full circle, although the desired experiments were completed in this report, there is ample room to continue growing in analysis and R markdown skills.
