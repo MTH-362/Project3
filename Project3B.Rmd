@@ -160,16 +160,9 @@ coffee.new%>%
 
 Looking at this plot, it's evident that flavor shares a clear positive relationship with total coffee points. It makes sense that as flavor increases, the perception of the cup does as well. A good tasting coffee is likely to be a good cup of joe overall. There is an outlier at the low end of the plot, and it doesn't follow along with the trend. It's rating is much lower than the plot would have predicted, so there may be other factors within that cup of coffee that make it worse besides flavor.
 
-
-# Ian's EDA Graphs
-
 ```{r, echo=FALSE}
 coffee_ratings2 <- coffee_ratings %>%
   filter(Total.Cup.Points != 0)
-  
-coffee_ratings2 %>%  
-  ggplot(aes(x = Total.Cup.Points)) +
-  geom_histogram(binwidth = 1) + labs(x = "Total Coffee Points", y = "Count", title = "Total Coffee Points Distribution")
 ```
 
 
@@ -193,18 +186,9 @@ These plots look extremely similar, but the Robusta species has a lower mean tha
 
 > We filtered out the 0 total cup points since they are extreme low outliers. 
 
+Below are two graphs- one exploring the relation between category 2 defects and the total cup points, and the other confirming there is no multicolinearity between the two categories of defects. 
+
 ```{r, echo=FALSE}
-coffee_ratings2 <- coffee_ratings %>%
-  filter(Total.Cup.Points != 0)
-  
-coffee_ratings2 %>%  
-  ggplot(aes(x = Total.Cup.Points)) +
-  geom_histogram(binwidth = 1)
-
-coffee_ratings2 %>%
-  ggplot(aes(y =Total.Cup.Points, x = altitude_mean_meters)) +
-  geom_point()
-
 coffee_ratings2 %>%
   ggplot(aes(y=Category.Two.Defects, x=Category.One.Defects)) +
   geom_point()
