@@ -323,7 +323,7 @@ coffee.new.data <- coffee.new %>% mutate(predict.inverse = gamma.best.inverse$fi
 coffee.new.data %>% summarize(MSE.inverse = mean((Total.Cup.Points - predict.inverse)^2),
                          MSE.log = mean((Total.Cup.Points - predict.log)^2),
                          MSE.identity = mean((Total.Cup.Points - predict.identity)^2),
-                         MSE.linear = mean((Total.Cup.Points -predict.linear)))
+                         MSE.linear = mean((Total.Cup.Points -predict.linear)^2))
 
 coffee.new.data %>% summarize(MAE.inverse = mean(abs(Total.Cup.Points - predict.inverse)),
                          MAE.log = mean(abs(Total.Cup.Points - predict.log)),
