@@ -178,7 +178,7 @@ These plots look extremely similar, but the Robusta species has a lower mean tha
 
 
 
-Below are two graphs- one exploring the relation between category 2 defects and the total cup points, and the other confirming there is no multicolinearity between the two categories of defects. 
+Below are two graphs- one exploring the relation between category 2 defects and the total cup points, and the other confirming there is no multicollinearity between the two categories of defects. 
 
 ```{r, echo=FALSE}
 coffee_ratings2 %>%
