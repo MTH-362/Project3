@@ -2,9 +2,6 @@
 title: "Project3B"
 author: "Tina Trinh, Ian Kramer, Mary Testa, and Ben Strougal"
 date: "`r Sys.Date()`"
-output:
-  pdf_document: default
-  html_document: default
 output: 
   html_document: 
     toc: TRUE
@@ -29,7 +26,7 @@ coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quali
 
 
 
-## Introduction
+# Introduction
 
 
 > This data was retrieved from the Coffee Quality Database courtesy of Buzzfeed Data Scientist James LeDoux. The information was collected from the Coffee Quality Institute's review pages in January 2018. This data holds very detailed information over Arabica and Robusta beans, across many countries and they are professionally rated on a 0-100 scale. There are many rates/scores for things like acidity, sweetness, fragrance, balance, etc. Here is a brief explanation of all the variables included in the data frame with 1311 observations on the following 44 variables:
@@ -198,7 +195,8 @@ coffee_ratings2 %>%
   geom_point()
 ```
 
-## MODEL SELECTION
+# Model Selection
+## Linear Model
 
 
 ```{r}
@@ -373,4 +371,4 @@ ggplot(data = coffee.new, aes(x = country_group, y = Total.Cup.Points, fill = co
 
 
 
-
+# Conclusion
