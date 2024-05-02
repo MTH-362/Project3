@@ -4,8 +4,6 @@ author: "Tina Trinh, Ian Kramer, Mary Testa, and Ben Strougal"
 date: "`r Sys.Date()`"
 output:
   pdf_document: default
-  html_document: default
-output: 
   html_document: 
     toc: TRUE
     toc_float: TRUE
