@@ -1,0 +1,383 @@
+---
+title: "Project3B"
+author: "Tina Trinh, Ian Kramer, Mary Testa, and Ben Strougal"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r, message=FALSE, warning=FALSE, echo = FALSE}
+library(tidyverse)
+library(mosaic)
+library(openintro)
+library(tidytuesdayR)
+library(leaps)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quality-database/master/data/arabica_data_cleaned.csv')
+```
+
+
+
+## Introduction
+
+
+> This data was retrieved from the Coffee Quality Database courtesy of Buzzfeed Data Scientist James LeDoux. The information was collected from the Coffee Quality Institute's review pages in January 2018. This data holds very detailed information over Arabica and Robusta beans, across many countries and they are professionally rated on a 0-100 scale. There are many rates/scores for things like acidity, sweetness, fragrance, balance, etc. Here is a brief explanation of all the variables included in the data frame with 1311 observations on the following 44 variables:
+
+
+|Variable|Description|
+|--- |--- |
+|…1|id|
+|Species|Species of coffee bean (arabica or robusta)|
+|Owner|Owner of the farm|
+|Country.of.Origin|Where the bean came from|
+|Farm.Name|Name of the farm|
+|Lot.Number|Lot number of the beans tested|
+|Mill|Mill where the beans were processed|
+|ICO.Number|International Coffee Organization number|
+|Company|Company name|
+|Altitude|Altitude|
+|Region|Region where bean came from|
+|Producer|Producer of the roasted bean|
+|Number.of.Bags|Number of bags tested|
+|Bag.Weight|Bag weight tested|
+|In.Country.Partner|Partner for the country|
+|Harvest.Year|When the beans were harvested (year)|
+|Grading.Date|When the beans were graded|
+|Owner.1|Who owns the beans|
+|Variety|Variety of the beans|
+|Processing.Method|Method for processing|
+|Aroma|Aroma grade|
+|Flavor|Flavor grade|
+|Aftertaste|Aftertaste grade|
+|Acidity|Acidity grade|
+|Body|Body grade|
+|Balance|Balance grade|
+|Uniformity|Uniformity grade|
+|Clean.Cup|Clean cup grade|
+|Sweetness|Sweetness grade|
+|Cupper.Points|Cupper Points|
+|Total.Cup.Points|Total rating/points (0 - 100 scale)|
+|Moisture|Moisture Grade|
+|Category.One.Defects|Category one defects (count)|
+|Quakers|quakers|
+|Color|Color of bean|
+|Category.Two.Defects|Category two defects (count)|
+|Expiration|Expiration date of the beans|
+|Certification.Body|Who certified it|
+|Certification.Address|Certification body address|
+|Certification.Contact|Certification contact|
+|unit_of_measurement|Unit of measurement|
+|altitude_low_meters|Altitude low meters|
+|altitude_high_meters|Altitude high meters|
+|altitude_mean_meters|Altitude mean meters|
+
+
+
+> The analysis begins with a linear regression, because it is by far the simplest one to run and will likely expose issues that can be resolved by choosing a different model. It is very unlikely that the linear regression will produce substantive results, but it serves as a solid base to start the analysis from. 
+
+> The explanatory variable chosen was total_cup_points. This was a fairly obvious choice, given that the ideal outcome was to determine what factors go into making the best cup of coffee. To this end, it was established fairly early on that the total_cup_points were simply equal to the sum of ten other variables already present in the dataset: aroma, flavor, aftertaste, acidity, body, balance, uniformity, clean_cup, sweetness, and cupper_points. Therefore, using these variables in any model would be both redundant and uninformative, as it is already known what the relation between them and the total score is.
+
+> Some of the EDA was made before this realization occured, but keeping them present doesn't cause any long-term issues. 
+
+## EDA
+
+We first check if the dataset contains any NA values and found that there's 3877 NA values. We then create a new clean dataset that omit the rows that has NA value and call that new dataset `coffee.clean`
+
+```{r, include = FALSE}
+# Check if there's any NA values
+print(sum(is.na(coffee_ratings)))
+```
+
+```{r, include = FALSE}
+# clean NA value, assign the clean dataset as coffee.clean
+coffee.clean <- na.omit(coffee_ratings)
+
+# verify if the dataset is clean
+print(sum(is.na(coffee.clean)))
+```
+
+> When we plot the distribution of the variable `Total.Cup.Points`, we see that distribution of the variable `Total.Cup.Points` is skewed to the left and unimodal. We can interpret this distribution as, in general, we have pretty high total rating points with the mean of around 82 points. The skewness of the distribution may suggest that there might be underlying interaction terms which are affecting the distribution of the variable. Note that there are 2 extreme outliers on this ditribution (based on the boxplot), so we'd use this distribution with caution.
+
+```{r, echo = FALSE}
+coffee.clean %>% ggplot(aes(x=Total.Cup.Points)) + geom_density()
+coffee.clean %>% ggplot(aes(x=Total.Cup.Points)) + geom_boxplot()
+print(mean(coffee.clean$Total.Cup.Points))
+```
+
+
+> We simplified the categorical variable of country of origin of the coffee bean by assigning the countries based on their continents (Asia, South America, Africa) rather than having the specific country of where the beans came from. We assign the new dataset as `coffee.new` that contains the grouping of the countries based on their continent.
+
+
+```{r, include=FALSE}
+
+print(unique(coffee.clean$Country.of.Origin))
+print(unique(coffee.clean$Processing.Method))
+
+coffee.new <- coffee.clean %>% mutate(
+  country_group = case_when(
+    Country.of.Origin %in% c("El Salvador", "Costa Rica", "Guatemala", "Honduras", "Brazil", "Mexico", "Nicaragua") ~ "South America",
+    Country.of.Origin %in% c("Uganda", "Tanzania, United Republic Of") ~ "Africa",
+    Country.of.Origin %in% c("Taiwan", "Indonesia", "China") ~ "Asia"
+  
+  ))
+glimpse(coffee.new)
+
+```
+
+> Since we want to simplify the process of model selection, we'd exclude the variables that have string values and only focus on those with numerical values then assign this new dataset as `coffee.new`.
+
+```{r, echo = FALSE}
+coffee.new[,c('Species','...1','Owner','Country.of.Origin','Farm.Name','Lot.Number','Mill','ICO.Number','Company','Region',
+                    'Producer','Bag.Weight','In.Country.Partner','Harvest.Year','Grading.Date','Owner.1','Variety','Expiration',
+              'Certification.Body','Certification.Address','Certification.Contact','unit_of_measurement', 'Altitude','altitude_low_meters','altitude_high_meters','altitude_mean_meters')] <- list(NULL)
+glimpse(coffee.new)
+```
+
+We've discussed that there might be some interaction terms that are affecting the distribution of the variable `Total.Cup.Points`, and based on the plot, it suggests that there may be an interaction between the variables 'Country.Group' and 'Flavor'. Specifically, the distribution of 'Total.Cup.Points' appears to vary across different levels of 'Flavor' within each level of 'Country.Group'. This suggests that the effect of 'Flavor' on 'Total.Cup.Points' may depend on the 'Country.Group', indicating a potential interaction between these two factors. 
+
+```{r, echo = FALSE, warning = FALSE}
+coffee.new%>%
+  ggplot(aes(x=Flavor, 
+             y=Total.Cup.Points)) + 
+  geom_point() +
+  geom_smooth(method='lm',
+              se=FALSE) +
+  labs(x='Flavor', 
+       y='Total Coffee Points', 
+       title='Flavor vs. Total Coffee Points')
+```
+
+Looking at this plot, it's evident that flavor shares a clear positive relationship with total coffee points. It makes sense that as flavor increases, the perception of the cup does as well. A good tasting coffee is likely to be a good cup of joe overall. There is an outlier at the low end of the plot, and it doesn't follow along with the trend. It's rating is much lower than the plot would have predicted, so there may be other factors within that cup of coffee that make it worse besides flavor.
+
+
+# Ian's EDA Graphs
+
+```{r, echo=FALSE}
+coffee_ratings2 <- coffee_ratings %>%
+  filter(Total.Cup.Points != 0)
+  
+coffee_ratings2 %>%  
+  ggplot(aes(x = Total.Cup.Points)) +
+  geom_histogram(binwidth = 1) + labs(x = "Total Coffee Points", y = "Count", title = "Total Coffee Points Distribution")
+```
+
+
+There was one observation in the data that had a total coffee point score of 0. This is an extreme outlier, and also doesn't really make sense logistically. It would be hard for any cup of coffee to truly score a flat 0 without there being some sort of bias in the rating. With a score that low, it could affect the model later on, so removing it from the data would be a good decision.
+
+
+```{r, echo = FALSE}
+ggplot(data = coffee_ratings2, aes(x = Total.Cup.Points, fill = Species, color = Species)) + geom_density() + facet_wrap(~ Species) + labs(x = "Total Cup Points", title = "Species vs. Total Cup Points")
+
+```
+
+
+```{r}
+
+ggplot(data = coffee.new, aes(x = country_group, y = Total.Cup.Points, fill = country_group)) + geom_boxplot() + labs(x = "Continent", y = "Total Coffee Points", title = "Total Coffee Points Based on Continent")
+```
+
+
+These plots look extremely similar, but the Robusta species has a lower mean than Arabica. Since the shape of the density plots are so similar in shape, it seems that Robusta as a species is very close in consistency to Arabica. Because the mean is lower though, there may be some kind of genetic issue with the bean that maybe doesn't bring out as much flavor or something like that. Overall though, the species are very comparable to one another.
+
+
+> We filtered out the 0 total cup points since they are extreme low outliers. 
+
+```{r, echo=FALSE}
+coffee_ratings2 <- coffee_ratings %>%
+  filter(Total.Cup.Points != 0)
+  
+coffee_ratings2 %>%  
+  ggplot(aes(x = Total.Cup.Points)) +
+  geom_histogram(binwidth = 1)
+
+coffee_ratings2 %>%
+  ggplot(aes(y =Total.Cup.Points, x = altitude_mean_meters)) +
+  geom_point()
+
+coffee_ratings2 %>%
+  ggplot(aes(y=Category.Two.Defects, x=Category.One.Defects)) +
+  geom_point()
+
+coffee_ratings2 %>%
+  ggplot(aes(y=Total.Cup.Points, x=Category.Two.Defects)) +
+  geom_point()
+```
+
+## MODEL SELECTION
+
+
+```{r}
+linear.model.all <- lm(Total.Cup.Points ~ ., data=coffee.new)
+summary(linear.model.all)
+```
+
+
+```{r, echo=TRUE, eval=FALSE}
+coffeeSub <- regsubsets(`Total.Cup.Points` ~ Category.Two.Defects + Category.One.Defects + 
+    Moisture + Quakers + altitude_mean_meters + Number.of.Bags, data = coffee.clean, nbest=2)
+plot(coffeeSub)
+
+model3 <- lm(Total.Cup.Points~ Category.Two.Defects + Moisture, data = coffee.new)
+
+summary(model3)
+
+```
+
+
+To perform model selection, a subset selection of variables can be created to help choose variables to put into a linear model. After running the subset selection, the best model that can be created is a linear model with category two defects and moisture as the sole explanatory variables. Even using the best model possible for a linear model, the adjusted R squared is still extremely low. Because of this, a linear model shouldn't be used, and a different model should be found. A gamma might be better in this scenario because our data is continuous and positive.
+
+
+
+```{r}
+naCoffee = coffee.new %>% drop_na()
+```
+
+```{r, trace = 0}
+stepwise <- lm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
+    Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - 
+    Sweetness - Uniformity, data= coffee.new)
+model_b <- step(stepwise, direction='backward')
+```
+
+
+> We chose the "best" linear model based on their AIC, which is 194.57
+
+```{r}
+best.linear.model <- lm(Total.Cup.Points ~ Processing.Method + Color + country_group, data = coffee.new)
+summary(best.linear.model)
+```
+
+
+## Gamma 
+
+### Gamma inverse link
+
+```{r}
+library(MASS)
+gamma.inverse <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
+    Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - 
+    Sweetness - Uniformity, family = Gamma(link = "inverse"),  data = coffee.new)
+summary(gamma.inverse)
+
+gamma.inverse.back <- step(gamma.inverse, direction='backward')
+```
+
+
+"Best" gamma model with inverse link (the one with lowest AIC)
+```{r}
+gamma.best.inverse <- glm(Total.Cup.Points ~ country_group + Color + Processing.Method, data = coffee.new, family = Gamma(link = "inverse"))
+```
+
+
+
+### Gamma log link
+```{r}
+gamma.log <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
+    Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - 
+    Sweetness - Uniformity, family = Gamma(link = "log"),  data = coffee.new)
+summary(gamma.log)
+
+gamma.log.backward <- step(gamma.log, direction= 'backward')
+```
+
+"Best" gamma log 
+```{r}
+gamma.best.log <- glm(Total.Cup.Points ~ country_group + Color + Processing.Method, data = coffee.new, family = Gamma(link = "log"))
+```
+
+
+
+# Gamma identity
+
+```{r}
+gamma.identity <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - Sweetness - Uniformity, family = Gamma(link = "identity"),  data = coffee.new)
+summary(gamma.identity)
+
+gamma.identity.backward <- step(gamma.identity, direction = 'backward')
+```
+
+"Best" identity link
+
+
+```{r}
+gamma.best.identity <- glm(Total.Cup.Points ~ Processing.Method + Color + country_group, data = coffee.new, family = Gamma(link = "identity"))
+```
+
+
+### Compare MSE and MAE for gamma and linear 
+```{r}
+
+coffee.new.data <- coffee.new %>% mutate(predict.inverse = gamma.best.inverse$fitted.values, 
+                                    predict.identity = gamma.best.identity$fitted.values,
+                                    predict.log = gamma.best.log$fitted.values,
+                                    predict.linear = best.linear.model$fitted.values)
+
+
+coffee.new.data %>% summarize(MSE.inverse = mean((Total.Cup.Points - predict.inverse)^2),
+                         MSE.log = mean((Total.Cup.Points - predict.log)^2),
+                         MSE.identity = mean((Total.Cup.Points - predict.identity)^2),
+                         MSE.linear = mean((Total.Cup.Points -predict.linear)^2))
+
+coffee.new.data %>% summarize(MAE.inverse = mean(abs(Total.Cup.Points - predict.inverse)),
+                         MAE.log = mean(abs(Total.Cup.Points - predict.log)),
+                         MAE.identity = mean(abs(Total.Cup.Points - predict.identity)),
+                         MAE.linear = mean(abs(Total.Cup.Points-predict.linear)))
+
+
+AIC(gamma.best.inverse)
+AIC(gamma.best.log)
+AIC(gamma.best.identity)
+AIC(best.linear.model)
+
+```
+
+
+### Linear model assumption check
+
+```{r}
+plot(best.linear.model, which =c(1,2))
+```
+
+
+
+### Gamma model assumption check 
+```{r}
+plot(gamma.best.inverse, which = c(1,2))
+
+```
+
+```{r}
+plot(gamma.best.identity, which =c(1,2))
+```
+
+
+```{r}
+plot(gamma.best.log, which =c(1,2))
+```
+
+
+For all of the gamma Q-Q and residuals vs. fitted plots, they are nearly identical to one another. For the Q-Q plots, they follow a very straight line. Because of this, they all have evidence for normality. However, the residuals vs. fitted plots are not randomly distributed across the horizontal axis at all. There is not enough evidence to claim linearity for the gamma models.
+
+
+Among the gamma models, the gamma model using the identity log function appears to be the best by checking its AIC value. The AIC is 580.82, which is marginally lower than the two other gamma models, making it the best option.
+
+
+## Gamma Analysis
+
+
+
+
+## Country Regions Plot
+
+```{r}
+
+ggplot(data = coffee.new, aes(x = country_group, y = Total.Cup.Points, fill = country_group)) + geom_boxplot() + labs(x = "Continent", y = "Total Coffee Points", title = "Total Coffee Points Based on Continent")
+```
+
+
+
+
+
+
