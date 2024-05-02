@@ -2,7 +2,12 @@
 title: "Project3B"
 author: "Tina Trinh, Ian Kramer, Mary Testa, and Ben Strougal"
 date: "`r Sys.Date()`"
-output: html_document
+output: 
+  html_document: 
+    toc: TRUE
+    toc_float: TRUE
+    theme: cosmo
+    code_download: TRUE
 ---
 
 ```{r, message=FALSE, warning=FALSE, echo = FALSE}
@@ -20,7 +25,7 @@ coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quali
 
 
 
-## Introduction
+# Introduction
 
 
 > This data was retrieved from the Coffee Quality Database courtesy of Buzzfeed Data Scientist James LeDoux. The information was collected from the Coffee Quality Institute's review pages in January 2018. This data holds very detailed information over Arabica and Robusta beans, across many countries and they are professionally rated on a 0-100 scale. There are many rates/scores for things like acidity, sweetness, fragrance, balance, etc. Here is a brief explanation of all the variables included in the data frame with 1311 observations on the following 44 variables:
@@ -81,7 +86,7 @@ coffee_ratings <- read_csv('https://raw.githubusercontent.com/jldbc/coffee-quali
 
 > Some of the EDA was made before this realization occured, but keeping them present doesn't cause any long-term issues. 
 
-## EDA
+# EDA
 
 We first check if the dataset contains any NA values and found that there's 3877 NA values. We then create a new clean dataset that omit the rows that has NA value and call that new dataset `coffee.clean`
 
@@ -151,9 +156,6 @@ coffee.new%>%
 
 Looking at this plot, it's evident that flavor shares a clear positive relationship with total coffee points. It makes sense that as flavor increases, the perception of the cup does as well. A good tasting coffee is likely to be a good cup of joe overall. There is an outlier at the low end of the plot, and it doesn't follow along with the trend. It's rating is much lower than the plot would have predicted, so there may be other factors within that cup of coffee that make it worse besides flavor.
 
-
-# Ian's EDA Graphs
-
 ```{r, echo=FALSE}
 coffee_ratings2 <- coffee_ratings %>%
   filter(Total.Cup.Points != 0)
@@ -205,7 +207,7 @@ coffee_ratings2 %>%
   geom_point()
 ```
 
-## MODEL SELECTION
+# MODEL SELECTION
 
 
 ```{r}
