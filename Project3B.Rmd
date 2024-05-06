@@ -201,7 +201,7 @@ summary(linear.model.all)
 ```
 
 
-```{r, echo=TRUE, eval=FALSE}
+```{r, echo=FALSE}
 coffeeSub <- regsubsets(`Total.Cup.Points` ~ Category.Two.Defects + Category.One.Defects + 
     Moisture + Quakers + altitude_mean_meters + Number.of.Bags, data = coffee.clean, nbest=2)
 plot(coffeeSub)
@@ -217,11 +217,11 @@ To perform model selection, a subset selection of variables can be created to he
 
 
 
-```{r}
+```{r, echo = FALSE}
 naCoffee = coffee.new %>% drop_na()
 ```
 
-```{r, trace = 0}
+```{r, trace = 0, echo = FALSE}
 stepwise <- lm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
     Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - 
     Sweetness - Uniformity, data= coffee.new)
@@ -230,7 +230,7 @@ model_b <- step(stepwise, direction='backward')
 
 
 
-```{r}
+```{r, echo = FALSE}
 linear.model <- lm(Total.Cup.Points ~ Processing.Method + Color + country_group, data = coffee.new)
 summary(linear.model)
 ```
@@ -239,7 +239,7 @@ summary(linear.model)
 
 Based on the residual and QQ plots, we see that clearly, the model 3 meets normality, equal variance, and linearity assumptions (we assume that both the models meet the independent assumption). Therefore, we'd use `model3` as our "best" linear model 
 
-```{r}
+```{r, echo = FALSE}
 plot(model3, which = c(1,2))
 plot(linear.model, which =c(1,2))
 ```
@@ -254,7 +254,7 @@ Recall that our `Total.Cup.Points` variable is continuous and skewed, therefore,
 
 We first assign the model `gamma.inverse` with all the explanatory variables. Then we'll use the backward model selection to select the "best" gamma model and call it `gamma.best.inverse` (the "best" model is chosen based on the smalles AIC)
 
-```{r}
+```{r, echo = FALSE}
 library(MASS)
 gamma.inverse <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
     Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - 
@@ -272,7 +272,7 @@ gamma.best.inverse <- glm(Total.Cup.Points ~ country_group + Color + Processing.
 
 Similar to the inverse link, we also use the backward model selection to select the "best" gamma model with log link and assign it as `gamma.log.backward`
 
-```{r}
+```{r, echo = FALSE}
 gamma.log <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - 
     Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - 
     Sweetness - Uniformity, family = Gamma(link = "log"),  data = coffee.new)
@@ -287,7 +287,7 @@ gamma.best.log <- glm(Total.Cup.Points ~ country_group + Color + Processing.Meth
 
 We also select the "best" gamma model with identity log using the same process as we did for the log and inverse link, then assign that "best" gamma model as `gamma.identity.backward`
 
-```{r}
+```{r, echo = FALSE}
 gamma.identity <- glm(Total.Cup.Points ~ . - Flavor - Cupper.Points - Aroma - Aftertaste - Body - Acidity - Balance - Clean.Cup - Sweetness - Uniformity, family = Gamma(link = "identity"),  data = coffee.new)
 summary(gamma.identity)
 
@@ -302,7 +302,7 @@ gamma.best.identity <- glm(Total.Cup.Points ~ Processing.Method + Color + countr
 
 The linearity and equal variance assumptions are not met because the red line is curvature rather than straight and horizontal like it's supposed to be, also the data points seem to clump up instead of spreading out evenly. The normality assumption is moderately good because the data points all line up on the line, there are some points that not really on the predict line at the end, suggests that they might be extreme outliers. 
 
-```{r}
+```{r, echo = FALSE}
 plot(gamma.best.inverse, which = c(1,2))
 
 ```
@@ -310,14 +310,14 @@ plot(gamma.best.inverse, which = c(1,2))
 
 Similar to the inverse, the linearity and the equal variance assumptions are not quite met. The QQ plot is also moderately good because they all on the theoritical line except some points are not at the very end
 
-```{r}
+```{r, echo = FALSE}
 plot(gamma.best.identity, which =c(1,2))
 ```
 
 
 Using the same reasoning, we can see that the equal variance as well as linearity assumptions are not met, but the normality is. 
 
-```{r}
+```{r, echo = FALSE}
 plot(gamma.best.log, which =c(1,2))
 ```
 
@@ -329,7 +329,7 @@ Among the gamma models, the gamma model using the identity log function appears 
 
 
 ### Compare MSE and MAE for gamma and linear 
-```{r}
+```{r, echo = FALSE}
 
 coffee.new.data <- coffee.new %>% mutate(predict.inverse = gamma.best.inverse$fitted.values, 
                                     predict.identity = gamma.best.identity$fitted.values,
@@ -354,7 +354,7 @@ coffee.new.data %>% summarize(MAE.inverse = mean(abs(Total.Cup.Points - predict.
 
 ## Country Regions Plot
 
-```{r}
+```{r, echo = FALSE}
 
 ggplot(data = coffee.new, aes(x = country_group, y = Total.Cup.Points, fill = country_group)) + geom_boxplot() + labs(x = "Continent", y = "Total Coffee Points", title = "Total Coffee Points Based on Continent")
 ```
