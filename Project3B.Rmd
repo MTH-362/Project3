@@ -168,7 +168,7 @@ ggplot(data = coffee_ratings2, aes(x = Total.Cup.Points, fill = Species, color =
 ```
 
 
-```{r}
+```{r, echo = FALSE}
 
 ggplot(data = coffee.new, aes(x = country_group, y = Total.Cup.Points, fill = country_group)) + geom_boxplot() + labs(x = "Continent", y = "Total Coffee Points", title = "Total Coffee Points Based on Continent")
 ```
@@ -195,7 +195,7 @@ coffee_ratings2 %>%
 ## Linear Model
 
 
-```{r}
+```{r, echo = FALSE}
 linear.model.all <- lm(Total.Cup.Points ~ ., data=coffee.new)
 summary(linear.model.all)
 ```
